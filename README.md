@@ -10,7 +10,7 @@ GUI 直接搜索 _huawei_ 下载即可
 
 ### 图床配置
 
-![picbed.png](img/picbed.png)
+![](http://nebulas.obs.cn-south-1.myhuaweicloud.com/picgo/20210513214613.png)
 
 ### 配置
 
