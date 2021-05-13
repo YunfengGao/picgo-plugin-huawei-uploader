@@ -1,6 +1,6 @@
 {
   "name": "picgo-plugin-huawei-uploader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "华为云对象存储图床",
   "main": "dist/index.js",
   "publishConfig": {
