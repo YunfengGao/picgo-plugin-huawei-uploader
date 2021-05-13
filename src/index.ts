@@ -42,7 +42,7 @@ const handle = async (ctx: picgo): Promise<picgo> => {
         image = Buffer.from(imgList[i].base64Image, 'base64')
       }
       const options = postOptions(obsOptions, imgList[i].fileName, signature, image)
-      const body = await ctx.Request.request(options)
+      const body = await ctx.request(options)
       if (body.statusCode === 200 || body.statusCode === 201) {
         delete imgList[i].base64Image
         delete imgList[i].buffer
