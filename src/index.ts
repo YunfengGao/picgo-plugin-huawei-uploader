@@ -1,26 +1,30 @@
 import picgo from 'picgo'
 import { PluginConfig } from 'picgo/dist/utils/interfaces'
 import crypto from 'crypto'
-
+const mime_types = require("mime")
 
 const generateSignature = (options: any, fileName: string): string => {
   const date = new Date().toUTCString()
-  const mimeType = ''
+  const mimeType = mime_types.getType(fileName);
+  if (!mimeType) {
+    throw Error(`No mime type found for file ${fileName}`)
+  }
   const path = options.path
-  const strToSign = `PUT\n\n${mimeType}\n${date}\n/${options.bucketName}${path ? '/' + options.path: ''}/${fileName}`
+  const strToSign = `PUT\n\n${mimeType}\n${date}\n/${options.bucketName}${path ? '/' + options.path : ''}/${fileName}`
   const signature = crypto.createHmac('sha1', options.accessKeySecret).update(strToSign).digest('base64')
   return `OBS ${options.accessKeyId}:${signature}`
 }
 
 const postOptions = (options: any, fileName: string, signature: string, image: Buffer): any => {
   const path = options.path
+  const mimeType = mime_types.getType(fileName);
   return {
     method: 'PUT',
     url: `http://${options.bucketName}.${options.endpoint}${path ? '/' + options.path: ''}/${encodeURI(fileName)}`,
     headers: {
       Authorization: signature,
       Date: new Date().toUTCString(),
-      'content-type': ''
+      'content-type': mimeType
     },
     body: image,
     resolveWithFullResponse: true
@@ -33,21 +37,22 @@ const handle = async (ctx: picgo): Promise<picgo> => {
     throw new Error('找不到华为OBS图床配置文件')
   }
   try {
-    const imgList = ctx.output
-    for (let i in imgList) {
-      if (!imgList.hasOwnProperty(i)) continue
-      const signature = generateSignature(obsOptions, imgList[i].fileName)
-      let image = imgList[i].buffer
-      if (!image && imgList[i].base64Image) {
-        image = Buffer.from(imgList[i].base64Image, 'base64')
-      }
-      const options = postOptions(obsOptions, imgList[i].fileName, signature, image)
-      const body = await ctx.request(options)
-      if (body.statusCode === 200 || body.statusCode === 201) {
-        delete imgList[i].base64Image
-        delete imgList[i].buffer
-        const path = obsOptions.path
-        imgList[i].imgUrl = `http://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${imgList[i].fileName}`
+    const images = ctx.output
+    for (const img of images) {
+      if (img.fileName && img.buffer) {
+        const signature = generateSignature(obsOptions, img.fileName)
+        let image = img.buffer
+        if (!image && img.base64Image) {
+          image = Buffer.from(img.base64Image, 'base64')
+        }
+        const options = postOptions(obsOptions, img.fileName, signature, image)
+        const response = await ctx.request(options)
+        if (response.statusCode === 200) {
+          delete img.base64Image
+          delete img.buffer
+          const path = obsOptions.path
+          img.imgUrl = `http://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
+        }
       }
     }
     return ctx
@@ -61,15 +66,13 @@ const handle = async (ctx: picgo): Promise<picgo> => {
 }
 
 const config = (ctx: picgo): PluginConfig[] => {
-  let userConfig = ctx.getConfig<config>('picBed.huaweicloud-uploader')
-  if (!userConfig) {
-    userConfig = {
-        accessKeyId: '',
-        accessKeySecret: '',
-        bucketName: '',
-        endpoint: '',
-        path:''
-    }
+  const userConfig = ctx.getConfig<config>('picBed.huaweicloud-uploader') ||
+  {
+    accessKeyId: '',
+    accessKeySecret: '',
+    bucketName: '',
+    endpoint: '',
+    path: ''
   }
   return [
     {
