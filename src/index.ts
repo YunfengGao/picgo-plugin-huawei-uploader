@@ -20,7 +20,7 @@ const postOptions = (options: any, fileName: string, signature: string, image: B
   const mimeType = mime_types.getType(fileName);
   return {
     method: 'PUT',
-    url: `http://${options.bucketName}.${options.endpoint}${path ? '/' + options.path: ''}/${encodeURI(fileName)}`,
+    url: `https://${options.bucketName}.${options.endpoint}${path ? '/' + options.path : ''}/${encodeURI(fileName)}`,
     headers: {
       Authorization: signature,
       Date: new Date().toUTCString(),
@@ -51,7 +51,7 @@ const handle = async (ctx: picgo): Promise<picgo> => {
           delete img.base64Image
           delete img.buffer
           const path = obsOptions.path
-          img.imgUrl = `http://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
+          img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
         }
       }
     }
