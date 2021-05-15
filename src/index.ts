@@ -28,7 +28,7 @@ const postOptions = (options: any, fileName: string, signature: string, image: B
 }
 
 const handle = async (ctx: picgo): Promise<picgo> => {
-  const obsOptions = ctx.getConfig('picBed.huaweicloud-uploader')
+  const obsOptions = ctx.getConfig<config>('picBed.huaweicloud-uploader')
   if (!obsOptions) {
     throw new Error('找不到华为OBS图床配置文件')
   }
@@ -61,9 +61,15 @@ const handle = async (ctx: picgo): Promise<picgo> => {
 }
 
 const config = (ctx: picgo): PluginConfig[] => {
-  let userConfig = ctx.getConfig('picBed.huaweicloud-uploader')
+  let userConfig = ctx.getConfig<config>('picBed.huaweicloud-uploader')
   if (!userConfig) {
-    userConfig = {}
+    userConfig = {
+        accessKeyId: '',
+        accessKeySecret: '',
+        bucketName: '',
+        endpoint: '',
+        path:''
+    }
   }
   return [
     {
