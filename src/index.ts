@@ -52,6 +52,9 @@ const handle = async (ctx: picgo): Promise<picgo> => {
           delete img.buffer
           const path = obsOptions.path
           img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
+          if (obsOptions.imageProcess) {
+            img.imgUrl = img.imgUrl + obsOptions.imageProcess
+          }
         }
       }
     }
@@ -72,12 +75,14 @@ const config = (ctx: picgo): PluginConfig[] => {
     accessKeySecret: '',
     bucketName: '',
     endpoint: '',
-    path: ''
+    path: '',
+    imageProcess: ''
   }
   return [
     {
       name: 'accessKeyId',
       type: 'input',
+      alias: 'AccessKeyId',
       default: userConfig.accessKeyId || '',
       message: 'AccessKeyId 不能为空',
       required: true
@@ -85,6 +90,7 @@ const config = (ctx: picgo): PluginConfig[] => {
     {
       name: 'accessKeySecret',
       type: 'password',
+      alias: 'AccessKeySecret',
       default: userConfig.accessKeySecret || '',
       message: 'AccessKeySecret 不能为空',
       required: true
@@ -92,6 +98,7 @@ const config = (ctx: picgo): PluginConfig[] => {
     {
       name: 'bucketName',
       type: 'input',
+      alias: 'BucketName',
       default: userConfig.bucketName || '',
       message: 'BucketName 不能为空',
       required: true
@@ -99,17 +106,25 @@ const config = (ctx: picgo): PluginConfig[] => {
     {
       name: 'endpoint',
       type: 'input',
-      alias: '区域EndPoint',
+      alias: 'EndPoint',
       default: userConfig.endpoint || '',
-      message: '区域EndPoint不能为空',
+      message: 'EndPoint 不能为空',
       required: true
     },
     {
       name: 'path',
       type: 'input',
       alias: '存储路径',
-      message: 'img',
+      message: '如img或img/github',
       default: userConfig.path || '',
+      required: false
+    },
+    {
+      name: 'imageProcess',
+      type: 'input',
+      alias: '图片处理',
+      message: '如 ?x-image-process=image/resize,p_100',
+      default: userConfig.imageProcess || '',
       required: false
     }
   ]

@@ -3,5 +3,6 @@ interface config {
     accessKeySecret: string,
     bucketName: string,
     endpoint: string,
-    path:string
+    path:string,
+    imageProcess:string
 }
