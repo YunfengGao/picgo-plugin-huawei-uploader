@@ -5,7 +5,7 @@ const mime_types = require("mime")
 
 const generateSignature = (options: any, fileName: string): string => {
   const date = new Date().toUTCString()
-  const mimeType = mime_types.getType(fileName);
+  const mimeType = mime_types.getType(fileName)
   if (!mimeType) {
     throw Error(`No mime type found for file ${fileName}`)
   }
@@ -17,7 +17,7 @@ const generateSignature = (options: any, fileName: string): string => {
 
 const postOptions = (options: any, fileName: string, signature: string, image: Buffer): any => {
   const path = options.path
-  const mimeType = mime_types.getType(fileName);
+  const mimeType = mime_types.getType(fileName)
   return {
     method: 'PUT',
     url: `https://${options.bucketName}.${options.endpoint}${path ? '/' + options.path : ''}/${encodeURI(fileName)}`,
