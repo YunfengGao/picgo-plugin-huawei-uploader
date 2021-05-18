@@ -53,7 +53,7 @@ const handle = async (ctx: picgo): Promise<picgo> => {
           const path = obsOptions.path
           img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
           if (obsOptions.imageProcess) {
-            img.imgUrl = img.imgUrl + obsOptions.imageProcess
+            img.imgUrl += obsOptions.imageProcess
           }
         }
       }
