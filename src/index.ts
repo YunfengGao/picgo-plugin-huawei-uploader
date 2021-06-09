@@ -10,7 +10,7 @@ const generateSignature = (options: any, fileName: string): string => {
     throw Error(`No mime type found for file ${fileName}`)
   }
   const path = options.path
-  const strToSign = `PUT\n\n${mimeType}\n${date}\n/${options.bucketName}${path ? '/' + options.path : ''}/${fileName}`
+  const strToSign = `PUT\n\n${mimeType}\n${date}\n/${options.bucketName}${path ? '/' + encodeURI(options.path) : ''}/${encodeURI(fileName)}`
   const signature = crypto.createHmac('sha1', options.accessKeySecret).update(strToSign).digest('base64')
   return `OBS ${options.accessKeyId}:${signature}`
 }
@@ -20,7 +20,7 @@ const postOptions = (options: any, fileName: string, signature: string, image: B
   const mimeType = mime_types.getType(fileName)
   return {
     method: 'PUT',
-    url: `https://${options.bucketName}.${options.endpoint}${path ? '/' + options.path : ''}/${encodeURI(fileName)}`,
+    url: `https://${options.bucketName}.${options.endpoint}${path ? '/' + encodeURI(options.path) : ''}/${encodeURI(fileName)}`,
     headers: {
       Authorization: signature,
       Date: new Date().toUTCString(),
@@ -51,7 +51,7 @@ const handle = async (ctx: picgo): Promise<picgo> => {
           delete img.base64Image
           delete img.buffer
           const path = obsOptions.path
-          img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + encodeURI(path) : ''}/${img.fileName}`
+          img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + path : ''}/${img.fileName}`
           if (obsOptions.imageProcess) {
             img.imgUrl += obsOptions.imageProcess
           }
