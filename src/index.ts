@@ -51,7 +51,8 @@ const handle = async (ctx: picgo): Promise<picgo> => {
           delete img.base64Image
           delete img.buffer
           const path = obsOptions.path
-          img.imgUrl = `https://${obsOptions.bucketName}.${obsOptions.endpoint}${path ? '/' + path : ''}/${img.fileName}`
+          const domain = obsOptions.customDomain ? obsOptions.customDomain : `https://${obsOptions.bucketName}.${obsOptions.endpoint}`
+          img.imgUrl = `${domain}${path ? '/' + path : ''}/${img.fileName}`
           if (obsOptions.imageProcess) {
             img.imgUrl += obsOptions.imageProcess
           }
@@ -76,7 +77,8 @@ const config = (ctx: picgo): PluginConfig[] => {
     bucketName: '',
     endpoint: '',
     path: '',
-    imageProcess: ''
+    imageProcess: '',
+    customDomain: ''
   }
   return [
     {
@@ -114,7 +116,7 @@ const config = (ctx: picgo): PluginConfig[] => {
     {
       name: 'path',
       type: 'input',
-      alias: '存储路径',
+      alias: '图片在OBS中的存储路径',
       message: '如img或img/github',
       default: userConfig.path || '',
       required: false
@@ -125,6 +127,14 @@ const config = (ctx: picgo): PluginConfig[] => {
       alias: '图片处理',
       message: '如 ?x-image-process=image/resize,p_100',
       default: userConfig.imageProcess || '',
+      required: false
+    },
+    {
+      name: 'customDomain',
+      type: 'input',
+      alias: '代理域名',
+      message: '如 https://mydomain.com',
+      default: userConfig.customDomain || '',
       required: false
     }
   ]

@@ -4,5 +4,6 @@ interface config {
     bucketName: string,
     endpoint: string,
     path:string,
-    imageProcess:string
+    imageProcess:string,
+    customDomain:string
 }

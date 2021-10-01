@@ -2,7 +2,7 @@
 
 An uploader for HuaweiCloud
 
-[PicGo](https://github.com/PicGo/PicGo-Core) 华为云OBS上传插件。
+[PicGo](https://github.com/Molunerfinn/PicGo) 华为云OBS上传插件。
 
 ### 安装 Installation
 GUI 直接搜索 _huawei_ 下载即可
