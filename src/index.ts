@@ -86,7 +86,7 @@ const config = (ctx: picgo): PluginConfig[] => {
       type: 'input',
       alias: 'AccessKeyId',
       default: userConfig.accessKeyId || '',
-      message: 'AccessKeyId 不能为空',
+      message: '例如XLHAFIDTRNX8SD6GYF1K',
       required: true
     },
     {
@@ -94,15 +94,15 @@ const config = (ctx: picgo): PluginConfig[] => {
       type: 'password',
       alias: 'AccessKeySecret',
       default: userConfig.accessKeySecret || '',
-      message: 'AccessKeySecret 不能为空',
+      message: '例如JuVs00Hua1YEDtJpEGaoOetYun3CFengXvjVbts4',
       required: true
     },
     {
       name: 'bucketName',
       type: 'input',
-      alias: 'BucketName',
+      alias: '桶名称',
       default: userConfig.bucketName || '',
-      message: 'BucketName 不能为空',
+      message: '例如bucket01',
       required: true
     },
     {
@@ -110,30 +110,30 @@ const config = (ctx: picgo): PluginConfig[] => {
       type: 'input',
       alias: 'EndPoint',
       default: userConfig.endpoint || '',
-      message: 'EndPoint 不能为空',
+      message: '例如obs.cn-south-1.myhuaweicloud.com',
       required: true
     },
     {
       name: 'path',
       type: 'input',
-      alias: '图片在OBS中的存储路径',
-      message: '如img或img/github',
+      alias: '存储路径',
+      message: '在桶中存储的路径，例如img或img/github',
       default: userConfig.path || '',
       required: false
     },
     {
       name: 'imageProcess',
       type: 'input',
-      alias: '图片处理',
-      message: '如 ?x-image-process=image/resize,p_100',
+      alias: '网址后缀',
+      message: '例如?x-image-process=image/resize,p_100',
       default: userConfig.imageProcess || '',
       required: false
     },
     {
       name: 'customDomain',
       type: 'input',
-      alias: '代理域名',
-      message: '如 https://mydomain.com',
+      alias: '自定义域名',
+      message: '例如https://mydomain.com',
       default: userConfig.customDomain || '',
       required: false
     }

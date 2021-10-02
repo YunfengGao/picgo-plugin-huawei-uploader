@@ -3,7 +3,7 @@ interface config {
     accessKeySecret: string,
     bucketName: string,
     endpoint: string,
-    path:string,
-    imageProcess:string,
-    customDomain:string
+    path: string,
+    imageProcess: string,
+    customDomain: string
 }
