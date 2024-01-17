@@ -5,5 +5,6 @@ interface config {
     endpoint: string,
     path: string,
     imageProcess: string,
-    customDomain: string
+    customDomain: string,
+    cacheControl: string
 }

@@ -24,7 +24,8 @@ const postOptions = (options: any, fileName: string, signature: string, image: B
     headers: {
       Authorization: signature,
       Date: new Date().toUTCString(),
-      'content-type': mimeType
+      'content-type': mimeType,
+      'Cache-Control': options.cacheControl
     },
     body: image,
     resolveWithFullResponse: true
@@ -78,7 +79,8 @@ const config = (ctx: picgo): PluginConfig[] => {
     endpoint: '',
     path: '',
     imageProcess: '',
-    customDomain: ''
+    customDomain: '',
+    cacheControl: ''
   }
   return [
     {
@@ -135,6 +137,14 @@ const config = (ctx: picgo): PluginConfig[] => {
       alias: '自定义域名',
       message: '例如https://mydomain.com',
       default: userConfig.customDomain || '',
+      required: false
+    },
+    {
+      name: 'cacheControl',
+      type: 'input',
+      alias: 'CacheControl配置',
+      message: '例如max-age=31536000',
+      default: userConfig.cacheControl || '',
       required: false
     }
   ]
